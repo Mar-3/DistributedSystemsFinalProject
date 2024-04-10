@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { Memo } from './objectComponents/Memo/Memo';
+import objects from './mockdata.json'
+
+const handleDrag = (objectId, x, y) => {
+  console.log('from app', x,y);
+  // TODO handling changes to backend
+}
 
 function App() {
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <header className="Workspace 1">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Edit a workspace
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <div className="workspace" style={{width:"100%"}}>
+        {objects.map((object)=> {
+          return (
+            <Memo props={object} handleDrag={handleDrag}/>
+          )
+        })}
+      </div>
     </div>
   );
 }

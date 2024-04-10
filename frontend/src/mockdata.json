@@ -1,0 +1,23 @@
+[
+    {
+        "object":"memo",
+        "x":20,
+        "y":20,
+        "text": "Testisheippi",
+        "bgcolor":"yellow"
+    },
+    {
+        "object":"memo",
+        "x":20,
+        "y":50,
+        "text": "Toinen",
+        "bgcolor":"red"
+    },
+    {
+        "object":"memo",
+        "x":50,
+        "y":50,
+        "text": "Ja kolomas",
+        "bgcolor":"blue"
+    }
+]
