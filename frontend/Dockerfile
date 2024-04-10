@@ -1,5 +1,4 @@
-# is this the corret node version??
-FROM node:18-alpine 
+FROM node:21.7.2-alpine3.18 
 
 WORKDIR /frontend/
 
@@ -10,3 +9,4 @@ COPY package.json /frontend/
 RUN npm install
 
 CMD ["npm", "start"]
+EXPOSE 3000
