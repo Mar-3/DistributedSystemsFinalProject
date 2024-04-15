@@ -1,8 +1,9 @@
 import './App.css';
 import { Memo } from './objectComponents/Memo/Memo';
-import objects from './mockdata.json'
+import initialObjects from './mockdata.json'
 import { useEffect, useState } from 'react';
 import { ContextMenu } from './UI/customContextMenu/ContextMenu';
+import {Toolbar } from './UI/Toolbar/Toolbar';
 
 
 
@@ -13,12 +14,25 @@ function App() {
     x:0,
     y:0
   })
-
+  const [objects, setObjects] = useState(initialObjects)
   const [selectedObjectId, setSelectedObjectId] = useState(null);
+ 
+  const handleAddMemo = () => {
+    console.log("adding a memo to 60 60")
+    const objs = [... objects];
+    objs.push({objectId:parseInt(objects.splice(-1)[0].objectId) + 1, object:"memo", x:60, y:60, text:"New Memo", "bgcolor": "yellow"});
+    console.log(objs)
+    setObjects(objs);
+  }
 
-  const handleDrag = (objectId, x, y) => {
-    console.log('from app', x,y);
-    // TODO handling changes to backend
+  const handleDrag = (objectId, e, data) => {
+    console.log(data)
+    console.log(e.x, e.y)
+    const objs = [... objects];
+    const index = objs.findIndex((el) => el.objectId === objectId);
+    objs[index].x = data.x;
+    objs[index].y = data.y;
+    setObjects(objs);
   }
   
   const handleColorChange = (objectId, x, y) => {
@@ -32,16 +46,16 @@ function App() {
 
   const handleRemove = (objectId) => {
     console.log('remove ', objectId)
-    console.log(objects)
     const index = objects.findIndex((el) => el.objectId === objectId);
+    console.log(index);
+    console.log(objects)
     if (index === undefined){
-
       return
     }
-    
-    console.log(index)
-    objects.splice(index,1);
-    console.log(objects)
+    const objs = [...objects];
+    objs.splice(index,1);
+    setObjects(objs);
+    console.log(objs)
   }
 
   useEffect(
@@ -73,6 +87,7 @@ function App() {
         break;
       default:
     }
+    setSelectedObjectId(null);
   }
 
   return (
@@ -82,6 +97,7 @@ function App() {
           Edit a workspace
         </p>
       </header>
+      <Toolbar addMemo={handleAddMemo}/>
       <div height={"100%"} className="workspace" style={{width:"100%", height:"50%"}}>
         {objects.map((object, index)=> {
           return (

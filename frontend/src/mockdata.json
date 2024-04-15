@@ -1,25 +1,25 @@
 [
     {
-        "objectId":"1",
+        "objectId":1,
         "object":"memo",
-        "x":20,
-        "y":20,
+        "x":200,
+        "y":200,
         "text": "Testisheippi",
         "bgcolor":"yellow"
     },
     {
-        "objectId":"2",
+        "objectId":2,
         "object":"memo",
-        "x":20,
-        "y":50,
+        "x":200,
+        "y":500,
         "text": "Toinen",
         "bgcolor":"red"
     },
     {
-        "objectId":"3",
+        "objectId":3,
         "object":"memo",
-        "x":50,
-        "y":50,
+        "x":500,
+        "y":500,
         "text": "Ja kolomas",
         "bgcolor":"blue"
     }
