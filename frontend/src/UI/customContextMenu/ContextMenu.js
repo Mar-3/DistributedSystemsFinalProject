@@ -5,7 +5,7 @@ import Menu from './Menu';
 
 
 
-export const ContextMenu = ({pos, setOpen}) => {
+export const ContextMenu = ({pos, handleClickContextMenu}) => {
 
     const options = [
         'edit',
@@ -13,13 +13,8 @@ export const ContextMenu = ({pos, setOpen}) => {
         'change color'
     ]
 
-    const onMenuClick = (item) => {
-        console.log('asd',item);
-        setOpen(false)
-    }
-    
     useEffect(() => {
-        const handleClick = () => setOpen(false);
+        const handleClick = () => handleClickContextMenu('nothing');
         window.addEventListener("click", handleClick);
         return () => {
             window.removeEventListener("click", handleClick);
@@ -32,7 +27,7 @@ export const ContextMenu = ({pos, setOpen}) => {
             <div style={{position:"absolute", top:pos.y, left:pos.x}}>
                 {options.map((item, index) => {
                     return(
-                    <div key={"menu-item-"+item+"-"+index} onClick={()=> onMenuClick(item)}>
+                    <div key={"menu-item-"+item+"-"+index} onClick={()=> handleClickContextMenu(item)}>
                         <Menu title={item}/>
                     </div>
                     )

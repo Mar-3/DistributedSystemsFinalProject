@@ -3,7 +3,7 @@ import Draggable, { DraggableData, DraggableEvent} from "react-draggable"
 import React, {useState, useRef} from 'react'
 
 export const Memo = ({props, handleDrag, handleOpenContextMenu}) => {
-    const {object, x, y, text, bgcolor} = props;
+    const {objectId, object, x, y, text, bgcolor} = props;
     const isDraggingRef = useRef(false);
     
     const onDrag = (e, data) => {
@@ -22,7 +22,7 @@ export const Memo = ({props, handleDrag, handleOpenContextMenu}) => {
                     style={{backgroundColor:bgcolor}}
                     onContextMenu={(e) => {
                         e.preventDefault();
-                        handleOpenContextMenu(e);
+                        handleOpenContextMenu(e, objectId);
                         }
                     }> 
                     <span className="memo-text">{text}</span>
