@@ -4,6 +4,7 @@ import initialObjects from './mockdata.json'
 import { useEffect, useState } from 'react';
 import { ContextMenu } from './UI/customContextMenu/ContextMenu';
 import {Toolbar } from './UI/Toolbar/Toolbar';
+import EditBox from './UI/EditBox/EditBox';
 
 
 
@@ -14,11 +15,11 @@ function App() {
     x:0,
     y:0
   })
+  const [editOpen, setEditOpen] = useState(false);
   const [objects, setObjects] = useState(initialObjects)
   const [selectedObjectId, setSelectedObjectId] = useState(null);
  
   const handleAddMemo = () => {
-    console.log("adding a memo to 60 60")
     const objs = [... objects];
     objs.push({objectId:parseInt(objects.splice(-1)[0].objectId) + 1, object:"memo", x:60, y:60, text:"New Memo", "bgcolor": "yellow"});
     console.log(objs)
@@ -40,8 +41,23 @@ function App() {
     objects.find((element) => {return element.objectId == objectId})
   }
 
-  const handleEditText = (objectId) => {
-    console.log('edit')
+  const handleEditObject = (objectId) => {
+    setEditOpen(true);
+  }
+  
+  const editObject = (objectId, text, bgcolor) => {
+    const objs = [... objects];
+    const index = objs.findIndex((obj) => obj.objectId === objectId);
+    objs[index].text = text;
+    objs[index].bgcolor = bgcolor;
+    
+    setEditOpen(false);
+    setObjects(objs);
+    setSelectedObjectId(null);
+  } 
+  
+  const handleEditClickOut = () => {
+    setEditOpen(false);
   }
 
   const handleRemove = (objectId) => {
@@ -77,7 +93,7 @@ function App() {
     setCmenuOpen(false);
     switch (option) {
       case 'edit':
-        handleEditText(selectedObjectId);
+        handleEditObject(selectedObjectId);
         break;
       case 'remove':
         handleRemove(selectedObjectId);
@@ -87,7 +103,6 @@ function App() {
         break;
       default:
     }
-    setSelectedObjectId(null);
   }
 
   return (
@@ -98,6 +113,7 @@ function App() {
         </p>
       </header>
       <Toolbar addMemo={handleAddMemo}/>
+      {editOpen && <EditBox objectId={selectedObjectId} editObject={editObject} handleEditOutClick={setEditOpen}/>}
       <div height={"100%"} className="workspace" style={{width:"100%", height:"50%"}}>
         {objects.map((object, index)=> {
           return (

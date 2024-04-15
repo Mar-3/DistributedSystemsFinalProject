@@ -8,7 +8,7 @@ export const Memo = ({props, handleDrag, handleOpenContextMenu}) => {
     const {objectId, object, x, y, text, bgcolor} = props;
     
     return (
-        <div style={{height:'0px'}}>
+        <div className='memo-main' style={{height:'0px'}}>
             <Draggable position={{x:x, y:y}} onStop={(e, data) => {
                 e.preventDefault();
                 handleDrag(objectId, e,  data);
@@ -19,7 +19,8 @@ export const Memo = ({props, handleDrag, handleOpenContextMenu}) => {
                         e.preventDefault();
                         handleOpenContextMenu(e, objectId);
                 }}> 
-                <span className="memo-text">{text}</span>
+                <span textWrap={"wrap"} className="memo-text">{text}
+                    </span>
                 </div>
             </Draggable>
         </div>
