@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import db
+from sqlalchemy import text
 
 app = FastAPI()
 
@@ -18,7 +20,10 @@ items = []
 
 @app.get("/")
 async def test():
-    return {"Hello" : "World"}
+    with db.engine.connect() as connection:
+        result = connection.execute(text("SELECT * FROM notes"))
+        print(result.fetchall())
+        return {"Hello" : result.fetchall()}
     
 
 @app.post("/echo")
