@@ -10,12 +10,12 @@ class TestItem(BaseModel):
     name: str
 
 class MemoItem(BaseModel):
-    objectId: str | any
+    objectId: str
     text:str
     x:int
     y:int
     bgcolor:str
-    workspace_id: int
+    workspace_id: str
 
 
 items = []
@@ -57,7 +57,7 @@ async def newWorkspace(workspace: TestItem):
     """Add new workspace"""
 
     with db.engine.connect() as connection:
-        res = connection.execute(text(f"INSERT INTO workspaces (name) VALUES ('{workspace.name}')"))
+        res = connection.execute(text(f"INSERT INTO workspaces (id, name) VALUES ( '{str(uuid4())}','{workspace.name}')"))
         connection.commit()
         return {"status": "yes"}
 
@@ -69,7 +69,9 @@ async def newMemo(memo: MemoItem):
     del memo.objectId
     memo.objectId = str(uuid4())
 
-    stmt = f"""INSERT INTO notes (text, positionx, positiony, color, workspace_id)
+    # get workspace id via workspace name
+
+    stmt = f"""INSERT INTO notes (text, positionx, positiony, color, workspace_id, id)
             VALUES ({str(memo.__dict__.values()).split("[")[1][:-2]})""" # dont ask, it works
         
     print(stmt)
