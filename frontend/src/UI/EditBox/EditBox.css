@@ -1,0 +1,16 @@
+#editbox {
+    background-color: #E7ECEF;
+    border-radius: 1rem;
+    box-shadow: rgba(209, 209, 209) 10px 10px 10px;
+}
+
+
+
+button {
+    background-color: #6096BA;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 1rem;
+    margin: 5px;
+}
