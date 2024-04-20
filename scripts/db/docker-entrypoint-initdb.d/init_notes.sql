@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS notes (
+    id VARCHAR(36) PRIMARY KEY,
+    text TEXT NOT NULL,
+    positionX INT NOT NULL,
+    positionY INT NOT NULL,
+    color VARCHAR(7) NOT NULL,
+    workspace_id VARCHAR(36) NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
