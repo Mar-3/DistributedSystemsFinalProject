@@ -10,7 +10,7 @@
     width: fit-content;
     height: fit-content;
     padding: 2rem;
-    border: 1px solid gray;
+    box-shadow: rgba(209, 209, 209, 0.35) 5px 5px 5px;
 }
 
 .memo-text {
