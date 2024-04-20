@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import db
-from sqlalchemy import text
+from sqlalchemy import text, insert
+from uuid import uuid4
 
 app = FastAPI()
 
@@ -9,12 +10,13 @@ class TestItem(BaseModel):
     name: str
 
 class MemoItem(BaseModel):
-    objectId: int
-    object:str
+    objectId: str
+    text:str
     x:int
     y:int
-    text:str
     bgcolor:str
+    workspace_id: str
+
 
 items = []
 
@@ -48,3 +50,34 @@ async def addMemo(MemoItem: MemoItem):
 @app.get("/objects/get/memo/all")
 async def getMemo():
     return {"items": items}
+
+
+@app.post("/new/workspace")
+async def newWorkspace(workspace: TestItem):
+    """Add new workspace"""
+
+    with db.engine.connect() as connection:
+        res = connection.execute(text(f"INSERT INTO workspaces (id, name) VALUES ( '{str(uuid4())}','{workspace.name}')"))
+        connection.commit()
+        return {"status": "yes"}
+
+@app.post("/new/memo")
+async def newMemo(memo: MemoItem):
+    """Adds a new memo to the database"""
+
+    # dummy id was provided with new memo so delete it and create an actual ID
+    del memo.objectId
+    memo.objectId = str(uuid4())
+
+    # get workspace id via workspace name
+
+    stmt = f"""INSERT INTO notes (text, positionx, positiony, color, workspace_id, id)
+            VALUES ({str(memo.__dict__.values()).split("[")[1][:-2]})""" # dont ask, it works
+        
+    print(stmt)
+
+    with db.engine.connect() as connection:
+        connection.execute(text(stmt))
+        connection.commit()
+
+    return {"objectId": memo.objectId}
