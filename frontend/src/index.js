@@ -3,11 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { WSContext, WSProvider } from './Providers/WSProvider/WSProvider';
+import { HandlingProvider } from './Providers/HandlingProvider/HandlingProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <WSProvider>
+      <HandlingProvider>
+        <App />
+      </HandlingProvider>
+    </WSProvider>
   </React.StrictMode>
 );
 
