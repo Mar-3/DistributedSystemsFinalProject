@@ -2,7 +2,7 @@ import './App.css';
 import { Memo } from './objectComponents/Memo/Memo';
 import initialObjects from './mockdata.json'
 import { useEffect, useState } from 'react';
-import { ContextMenu } from './UI/customContextMenu/ContextMenu';
+import { ContextMenu } from './UI/CustomContextMenu/ContextMenu';
 import {Toolbar } from './UI/Toolbar/Toolbar';
 import EditBox from './UI/EditBox/EditBox';
 
