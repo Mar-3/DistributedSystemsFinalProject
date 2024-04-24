@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { WSContext } from '../WSProvider/WSProvider';
 
-const authUrl = "http://10.5.0.2:8001/api/auth/";
+const authUrl = "http://localhost:8001/api/auth/";
 
 const HandlingContext = createContext();
 

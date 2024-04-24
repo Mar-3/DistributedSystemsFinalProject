@@ -4,8 +4,8 @@ from sqlalchemy import create_engine, text
 USERNAME = 'postgres'
 PASSWORD = 'postgres'
 
-HOSTNAME = '10.5.0.5'
-PORT = '5432'
+HOSTNAME = 'localhost'
+PORT = '6969'
 DB_NAME = 'postgres'
 
 conn_string = f'postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DB_NAME}'
