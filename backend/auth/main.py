@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy import text
 from uuid import uuid4
 import db
-app = FastAPI(root_paht="/api/auth")
+app = FastAPI(root_path="/api/auth")
 
 class Request(BaseModel):
     workspace_name: str
