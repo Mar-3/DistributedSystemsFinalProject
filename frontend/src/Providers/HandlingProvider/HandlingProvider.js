@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { WSContext } from '../WSProvider/WSProvider';
 
+const authUrl = "http://localhost:8001/api/auth/";
 
 const HandlingContext = createContext();
 
@@ -12,7 +13,20 @@ const HandlingProvider = ({children}) => {
   const [objects, setObjects] = useState(null);
   const [selectedObjectId, setSelectedObjectId] = useState(null);
   
-  
+  const handleWorkSpaceSubmit = async (workspaceName) => {
+    const res = await fetch(authUrl, {
+      method: "POST",
+      mode:"cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({workspace_name: workspaceName })
+    });
+    const data = await res.json();
+    const id = data.id;
+    setWorkspace(id);
+    WS.send(JSON.stringify({"operation": "selectWorkspace",  "id": id }));
+  }
 
   // Message handling from websocket connection
   WS.onmessage = (async (msgData) => {
@@ -96,9 +110,7 @@ const HandlingProvider = ({children}) => {
       setSelectedObjectId(null);
   } 
 
-  const handleWorkSpaceSubmit = (workspaceName) => {
-    WS.send(JSON.stringify({operation: "selectWorkspace", item: {name: workspaceName}}));
-  }
+
 
   return (
       <WSContext.Provider value={{WS, workspace, objects, selectedObjectId, setSelectedObjectId, handleRemove, handleWorkSpaceSubmit, editObject, handleDrag, handleAddMemo}}>
