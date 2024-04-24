@@ -2,7 +2,7 @@ import { useContext, createContext } from 'react';
 
 
 // TODO config file for things like this 
-const backendAddress = 'ws://localhost:8000/ws'
+const backendAddress = 'ws://74.234.25.173/ws'
 
 const WSContext = createContext();
 

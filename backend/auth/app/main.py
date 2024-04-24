@@ -2,13 +2,13 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import text
 from uuid import uuid4
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import db
 app = FastAPI(root_path="/api/auth")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*", "http://74.234.25.173", "http://74.234.25.173:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
