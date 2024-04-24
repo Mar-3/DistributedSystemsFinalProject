@@ -6,7 +6,6 @@ export const Memo = ({props, handleDrag, handleOpenContextMenu}) => {
 
  
     const {text, positionx, positiony, color, workspace_id, id} = props;
-    console.log('MEMOMEMOMEOMOE', props)
     return (
         <div className='memo-main' style={{height:'0px'}}>
             <Draggable position={{x:positionx, y:positiony}} onStop={(e, data) => {

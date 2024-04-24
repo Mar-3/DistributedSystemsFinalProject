@@ -36,7 +36,6 @@ class ConnectionManager:
         await websocket.send_text(message)
 
     async def sendToWorkspace(self, message, workspaceId):
-        print(message)
         for client in self.active_connections:
             if client.workspaceId == workspaceId:
                 await client.websocket.send_json(message)
@@ -61,7 +60,6 @@ items = []
 async def test():
     with db.engine.connect() as connection:
         result = connection.execute(text("SELECT * FROM notes"))
-        print(result.fetchall())
         return {"Hello" : result.fetchall()}
     
 
@@ -77,7 +75,6 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_json()
-            print(f"Sent from client: ", data)
             match (data["operation"]):
                 case "selectWorkspace":
                     ret = await selectWorkSpace(data["item"], client)
@@ -89,9 +86,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     ret = await deleteMemo(data["id"])
                 case _:
                     ret = {"msg": "unknown operation"}
-            print(f"Returning {ret}")
             if data.get("workspaceId"):  # I dont know, checking if client is in workspace :D 
-                print("Sending to workspace, ", data["workspaceId"])
                 await manager.sendToWorkspace(ret, str(data['workspaceId']))
             else:
                 await websocket.send_json(ret)

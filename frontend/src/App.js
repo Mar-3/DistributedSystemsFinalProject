@@ -43,24 +43,7 @@ function App() {
   }, [selectedObjectId])
 
 
-
-
-  useEffect(
-    () => {
-      console.log("changed selected object to " + selectedObjectId);
-    }, [selectedObjectId])
-  
-    useEffect(() => {
-      console.log('ws', workspace)
-    }, [workspace])
-
-    useEffect(() => {
-      console.log('o', objects)
-    }, [objects])
-
-  
   const handleOpenContextMenu = (e, id) => {
-    console.log("handleopen", e.pageX, e.pageY)
     setCMenuPos({x:e.clientX, y:e.clientY});
     setSelectedObjectId(id);
     setCmenuOpen(true);
@@ -94,10 +77,9 @@ function App() {
         </p>
       </header>
       {workspace!=null && <Toolbar addMemo={handleAddMemo}/>}
-      {editOpen && <EditBox id={selectedObjectId} editObject={editObject} handleEditOutClick={setEditOpen}/>}
+      {editOpen && selectedObjectId != null && <EditBox selectedObject={objects.find((el => el.id == selectedObjectId))} editObject={editObject} />}
       {(workspace !=null && objects!= null) && <div height={"100%"} className="workspace" style={{width:"100%", height:"50%"}}>
         {objects.map((object, index)=> {
-          console.log('obj,', object);
           return (
             <Memo key={'object-'+index} props={object} handleDrag={handleDrag} handleOpenContextMenu={handleOpenContextMenu}/>
           )

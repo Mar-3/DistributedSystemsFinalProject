@@ -21,7 +21,6 @@ const HandlingProvider = ({children}) => {
         case 'selectWorkspace':
           setWorkspace(data.workspaceID);
           if (data.items != undefined) {
-            console.log("SETTING WORKSPACE ", data.items);
             setObjects(data.items);
           }
           break;
@@ -35,14 +34,11 @@ const HandlingProvider = ({children}) => {
           setObjects(await receiveRemoveMemo(data.id));
           break;
         default:
-          console.log("ASDLAJDS:LKADS")
+          console.log("unknown operation from server, how?")
           break;
           
       }
     })
-
-
-
   
   
   const receiveAddMemo = async (item) => {
@@ -70,17 +66,15 @@ const HandlingProvider = ({children}) => {
 
 
   const handleAddMemo = async () => {
-      const newItem = {"text":"New Memo", positionx: 60, positiony:60, color:"yellow", workspace_id:workspace}
+      const newItem = {"text":"New Memo", positionx: 60, positiony:60, color:"#F9F06B", workspace_id:workspace}
       WS.send(JSON.stringify({operation: "addItem", item: newItem, workspaceId: workspace}))
     }
 
   const handleRemove = async (id) => {
-    console.log("handling remove, ", id );
     const objs = [... objects];
     const index = objs.findIndex((el) => el.id == id);
     objs.splice(index, 1);
     WS.send(JSON.stringify({operation: "delete", id:id, workspaceId:workspace}));
-    setObjects(objs);
   }
   
   const handleDrag = async (id, e, data) => {
@@ -89,20 +83,16 @@ const HandlingProvider = ({children}) => {
       objs[index].positionx = data.x;
       objs[index].positiony = data.y;
       WS.send(JSON.stringify({operation: "edit", item: objs[index], workspaceId:workspace}))
-      setObjects(objs);
     }
     
   const editObject = (id, text, color) => {
       const objs = [... objects];
       const index = objs.findIndex((obj) => obj.id === id);
-      console.log(index, objects)
       objs[index].text = text;
       objs[index].color = color;
-      console.log(objs[index])
       
       WS.send(JSON.stringify({operation: "edit", item: objs[index], workspaceId: workspace}));
       
-      setObjects(objs);
       setSelectedObjectId(null);
   } 
 
