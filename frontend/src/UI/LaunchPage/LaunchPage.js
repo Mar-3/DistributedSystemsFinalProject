@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './Launchpage.css'
 
 
 const LaunchPage = ({handleWorkspaceSubmit}) => {
@@ -7,7 +8,7 @@ const LaunchPage = ({handleWorkspaceSubmit}) => {
 
     return (
         <>
-        <div>
+        <div id="launch">
             <span><h2>Welcome to workspace-editor! (mikä tän nimi ees on?)</h2></span>
             <br/>
             <label>Enter workspace name:</label>
