@@ -8,6 +8,42 @@ from uuid import uuid4
 
 app = FastAPI()
 
+# https://fastapi.tiangolo.com/advanced/websockets/
+
+class WSConnection:
+    def __init__(self, websocket:WebSocket):
+        self.websocket = websocket
+        self.workspaceId = None
+    
+    def setWorkspace(self, id:str):
+        self.workspaceId = id
+
+
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: list[WSConnection] = []
+
+    async def connect(self, client:WSConnection):
+        print("New client")
+        await client.websocket.accept()
+        self.active_connections.append(client)
+
+    def disconnect(self, client:WSConnection):
+        self.active_connections.remove(client)
+
+    async def sendToClient(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
+
+    async def sendToWorkspace(self, message, workspaceId):
+        print(message)
+        for client in self.active_connections:
+            if client.workspaceId == workspaceId:
+                await client.websocket.send_json(message)
+
+
+manager = ConnectionManager()
+
 class WorkspaceItem(BaseModel):
     name: str
 
@@ -36,27 +72,37 @@ async def test():
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_json()
-        print(f"Sent from client: ", data)
-        match (data["operation"]):
-            case "selectWorkspace":
-                ret = await selectWorkSpace(data["item"])
-            case "addItem":
-                ret = await addMemo(data["item"])
-            case "edit":
-                ret = await editMemo(data["item"])
-            case "delete":
-                ret = await deleteMemo(data["id"])
-            case _:
-                ret = {"msg": "unknown operation"}
-        print(f"Returning {ret}")
-        await websocket.send_json(ret)
+    client = WSConnection(websocket)
+    await manager.connect(client)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            print(f"Sent from client: ", data)
+            match (data["operation"]):
+                case "selectWorkspace":
+                    ret = await selectWorkSpace(data["item"], client)
+                case "addItem":
+                    ret = await addMemo(data["item"])
+                case "edit":
+                    ret = await editMemo(data["item"])
+                case "delete":
+                    ret = await deleteMemo(data["id"])
+                case _:
+                    ret = {"msg": "unknown operation"}
+            print(f"Returning {ret}")
+            if data.get("workspaceId"):  # I dont know, checking if client is in workspace :D 
+                print("Sending to workspace, ", data["workspaceId"])
+                await manager.sendToWorkspace(ret, str(data['workspaceId']))
+            else:
+                await websocket.send_json(ret)
+    except Exception as e:
+        print(e)
+        manager.disconnect(client)
+        print(f"Client disconnected.")
 
 
 
-async def selectWorkSpace(workspace: WorkspaceItem):
+async def selectWorkSpace(workspace: WorkspaceItem, client:WSConnection):
     """Create or get workspace id to client"""
 
 
@@ -76,9 +122,7 @@ async def selectWorkSpace(workspace: WorkspaceItem):
             rows = connection.execute(text(f"""SELECT * FROM notes WHERE workspace_id='{workspaceId}'"""))
             for row in rows:
                 objs.append({"id":str(row[0]), "text":str(row[1]), "positionx":int(row[2]), "positiony":int(row[3]), "color":str(row[4]), "workspace_id":str(row[5])})
-            for row in objs:
-                print(row)
-        
+        client.setWorkspace(workspaceId)
         return {"operation":"selectWorkspace", "workspaceID": str(workspaceId), "items":objs}
     
 
@@ -91,7 +135,7 @@ async def editMemo(memo:MemoItem):
     with db.engine.connect() as connection:
         connection.execute(text(stmt))
         connection.commit()
-    return {"success": True}
+    return {"operation": "editObject", "item":memo}
     
 
 async def addMemo(memo: MemoItem):
@@ -105,7 +149,6 @@ async def addMemo(memo: MemoItem):
     stmt = f"""INSERT INTO notes (text, positionx, positiony, color, workspace_id, id)
             VALUES ({str(memo.values()).split("[")[1][:-2]})""" # dont ask, it works
         
-    print(stmt)
 
     with db.engine.connect() as connection:
         connection.execute(text(stmt))
@@ -122,4 +165,4 @@ async def deleteMemo(id: str):
         connection.execute(text(stmt))
         connection.commit()
 
-    return {"success": True}
+    return {"operation": "removeObject", "id": id}
