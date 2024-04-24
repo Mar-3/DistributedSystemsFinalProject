@@ -48,7 +48,7 @@ async def websocket_endpoint(websocket: WebSocket):
             case "edit":
                 ret = await editMemo(data["item"])
             case "delete":
-                ret = await deleteMemo(data["item"])
+                ret = await deleteMemo(data["id"])
             case _:
                 ret = {"msg": "unknown operation"}
         print(f"Returning {ret}")
@@ -75,7 +75,7 @@ async def selectWorkSpace(workspace: WorkspaceItem):
             workspaceId = str(workspaceId).split("'")[1]
             rows = connection.execute(text(f"""SELECT * FROM notes WHERE workspace_id='{workspaceId}'"""))
             for row in rows:
-                objs.append({"id":str(row[0]), "text":str(row[1]), "positionx":int(row[2]), "positiony":int(row[3]), "color":str(row[4]), "workspace_id":str(row[4])})
+                objs.append({"id":str(row[0]), "text":str(row[1]), "positionx":int(row[2]), "positiony":int(row[3]), "color":str(row[4]), "workspace_id":str(row[5])})
             for row in objs:
                 print(row)
         
@@ -113,10 +113,10 @@ async def addMemo(memo: MemoItem):
 
     return {"operation": "addObject", "item": memo}
 
-async def deleteMemo(memo: MemoItem):
+async def deleteMemo(id: str):
     """Removes a memo from the database"""
 
-    stmt = f"DELETE FROM notes WHERE id='{memo['obectId']}'"
+    stmt = f"DELETE FROM notes WHERE id='{id}'"
 
     with db.engine.connect() as connection:
         connection.execute(text(stmt))

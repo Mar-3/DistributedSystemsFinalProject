@@ -22,14 +22,17 @@ const HandlingProvider = ({children}) => {
         case 'selectWorkspace':
           setWorkspace(data.workspaceID);
           if (data.items != undefined) {
+            console.log("SETTING WORKSPACE ", data.items);
             setObjects(data.items);
           }
           break;
         case 'addObject':
-          onWsAddMemo(data.item);
+          setObjects(receiveAddMemo(data.item));
           break;
         case 'editObject':
-          onWsEditMemo(data.item);
+          setObjects(receiveEditMemo(data.item));
+        case 'removeObject':
+          console.log("TODO")
         default:
           console.log("ASDLAJDS:LKADS")
           
@@ -37,27 +40,36 @@ const HandlingProvider = ({children}) => {
     })
 
 
-  const handleWorkSpaceSubmit = (workspaceName) => {
-      WS.send(JSON.stringify({operation: "selectWorkspace", item: {name: workspaceName}}));
-  }
+
   
-  const onWsEditMemo = (item) => {
-      console.log(item)
-  }
   
-  const onWsAddMemo = (item, objects) => {
+  const receiveAddMemo = async (item, objects) => {
+    console.log(item)
+    let objs;
+    if (objects == null) {objs = []}
+    else  {objs = [... objects]};
+    objs.push(item);
+    return(objs);
+}
+
+  // TODO Get edits from backend 
+  const receiveEditMemo = async (item) => {
       console.log(item)
-      let objs;
-      if (objects == null) {objs = []}
-      else  {objs = [... objects]};
-      objs.push(item);
-      return(objs);
   }
 
-  const handleAddMemo = () => {
+
+  const handleAddMemo = async () => {
       const newItem = {"text":"New Memo", positionx: 60, positiony:60, color:"yellow", workspace_id:workspace}
       WS.send(JSON.stringify({operation: "addItem", item: newItem}))
     }
+
+  const handleRemove = async (id) => {
+    console.log("handling remove, ", id );
+    const objs = [... objects];
+    const index = objs.findIndex((el) => el.id == id);
+    objs.splice(index, 1);
+    WS.send(JSON.stringify({operation: "delete", id:id}));
+  }
   
   const handleDrag = async (id, e, data) => {
       const objs = [... objects];
@@ -74,6 +86,7 @@ const HandlingProvider = ({children}) => {
       console.log(index, objects)
       objs[index].text = text;
       objs[index].color = color;
+      console.log(objs[index])
       
       WS.send(JSON.stringify({operation: "edit", item: objs[index]}));
       
@@ -81,8 +94,12 @@ const HandlingProvider = ({children}) => {
       setSelectedObjectId(null);
   } 
 
+  const handleWorkSpaceSubmit = (workspaceName) => {
+    WS.send(JSON.stringify({operation: "selectWorkspace", item: {name: workspaceName}}));
+  }
+
   return (
-      <WSContext.Provider value={{WS, workspace, handleWorkSpaceSubmit, objects, selectedObjectId, setSelectedObjectId, editObject, handleDrag, handleAddMemo}}>
+      <WSContext.Provider value={{WS, workspace, objects, selectedObjectId, setSelectedObjectId, handleRemove, handleWorkSpaceSubmit, editObject, handleDrag, handleAddMemo}}>
           {children}
       </WSContext.Provider>
   )

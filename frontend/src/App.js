@@ -16,6 +16,7 @@ function App() {
   // Get websocket connection and hooks from provider 
   const {
     WS, 
+    handleRemove,
     workspace, 
     handleWorkSpaceSubmit, 
     objects, 
@@ -42,8 +43,7 @@ function App() {
   }, [selectedObjectId])
 
 
-  const handleRemove = (id) => {
-  }
+
 
   useEffect(
     () => {
@@ -97,6 +97,7 @@ function App() {
       {editOpen && <EditBox id={selectedObjectId} editObject={editObject} handleEditOutClick={setEditOpen}/>}
       {(workspace !=null && objects!= null) && <div height={"100%"} className="workspace" style={{width:"100%", height:"50%"}}>
         {objects.map((object, index)=> {
+          console.log('obj,', object);
           return (
             <Memo key={'object-'+index} props={object} handleDrag={handleDrag} handleOpenContextMenu={handleOpenContextMenu}/>
           )
