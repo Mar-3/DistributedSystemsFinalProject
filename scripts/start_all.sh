@@ -12,6 +12,10 @@ else
     # start database
     (cd ./db/ && docker compose up -d)
     # TODO: start backend
+    # start auth
+    (cd ../backend/auth &&
+    docker build -t auth . &&
+    docker run -d -p 8000:8000 auth)
 
     # start frontend
     (cd ../frontend/ && 
