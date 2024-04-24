@@ -5,19 +5,18 @@ import React, {useState, useRef} from 'react'
 export const Memo = ({props, handleDrag, handleOpenContextMenu}) => {
 
  
-    const {objectId, object, x, y, text, bgcolor} = props;
-    
+    const {text, positionx, positiony, color, workspace_id, id} = props;
     return (
         <div className='memo-main' style={{height:'0px'}}>
-            <Draggable position={{x:x, y:y}} onStop={(e, data) => {
+            <Draggable position={{x:positionx, y:positiony}} onStop={(e, data) => {
                 e.preventDefault();
-                handleDrag(objectId, e,  data);
+                handleDrag(id, e,  data);
             }}>
-                <div className={object}
-                    style={{backgroundColor: bgcolor}}
+                <div className="memo"
+                    style={{backgroundColor: color}}
                     onContextMenu={(e) => {
                         e.preventDefault();
-                        handleOpenContextMenu(e, objectId);
+                        handleOpenContextMenu(e, id);
                 }}> 
                 <span textWrap={"wrap"} className="memo-text">{text}
                     </span>

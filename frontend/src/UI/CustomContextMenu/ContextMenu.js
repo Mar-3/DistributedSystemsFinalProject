@@ -10,7 +10,6 @@ export const ContextMenu = ({pos, handleClickContextMenu}) => {
     const options = [
         'edit',
         'remove',
-        'change color'
     ]
 
     useEffect(() => {
