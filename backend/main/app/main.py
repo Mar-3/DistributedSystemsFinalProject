@@ -4,9 +4,18 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import db
 from sqlalchemy import text, insert
+from fastapi.middleware.cors import CORSMiddleware
 from uuid import uuid4
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # https://fastapi.tiangolo.com/advanced/websockets/
 
