@@ -1,4 +1,4 @@
-import { useContext, createContext } from 'react';
+import { useRef, useContext, createContext, useState } from 'react';
 
 
 // TODO config file for things like this 
@@ -14,10 +14,17 @@ const WSContext = createContext();
 const WSProvider = ({children}) => {
 
     // New Websocket connection
-    const WS = new WebSocket(backendAddress)
+    let WS = useRef(null);
+
+    const connectWS = async (msgfunc) => {
+        WS.current = new WebSocket(backendAddress);
+        WS.current.onmessage = msgfunc;
+    }
+    
+
 
     return (
-        <WSContext.Provider value={{WS}}>{children}</WSContext.Provider>
+        <WSContext.Provider value={{WS, connectWS}}>{children}</WSContext.Provider>
     )
 
 }

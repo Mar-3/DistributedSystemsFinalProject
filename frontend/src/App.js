@@ -6,6 +6,7 @@ import {Toolbar } from './UI/Toolbar/Toolbar';
 import EditBox from './UI/EditBox/EditBox';
 import LaunchPage from './UI/LaunchPage/LaunchPage';
 import { WSContext } from './Providers/WSProvider/WSProvider';
+import { HandlingContext } from './Providers/HandlingProvider/HandlingProvider';
 
 
 
@@ -18,14 +19,14 @@ function App() {
     WS, 
     handleRemove,
     workspace, 
-    handleWorkSpaceSubmit, 
+    handleWorkspaceSubmit, 
     objects, 
     selectedObjectId, 
     setSelectedObjectId, 
     handleColorChange, 
     editObject, 
     handleDrag,
-    handleAddMemo} = useContext(WSContext);
+    handleAddMemo} = useContext(HandlingContext);
 
   const [cMenuOpen, setCmenuOpen] = useState(false);
   const [cMenuPos, setCMenuPos] = useState({
@@ -69,6 +70,8 @@ function App() {
     }
   }
 
+  console.log(objects, editOpen, handleWorkspaceSubmit)
+
   return (
     <div className="App">
       <header>
@@ -85,7 +88,7 @@ function App() {
           )
         })}
       </div>}
-      {workspace==null && <LaunchPage handleWorkspaceSubmit={handleWorkSpaceSubmit}></LaunchPage>}
+      {workspace==null && <LaunchPage handleWorkspaceSubmit={handleWorkspaceSubmit}></LaunchPage>}
       {cMenuOpen && <ContextMenu pos={cMenuPos} handleClickContextMenu={handleClickContextMenu}/>}
     </div>
   );

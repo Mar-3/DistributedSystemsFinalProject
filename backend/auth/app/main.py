@@ -3,7 +3,17 @@ from pydantic import BaseModel
 from sqlalchemy import text
 from uuid import uuid4
 import db
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(root_path="/api/auth")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Request(BaseModel):
     workspace_name: str

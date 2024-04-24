@@ -75,9 +75,10 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_json()
+            print("got data", data)
             match (data["operation"]):
-                case "selectWorkspace":
-                    ret = await selectWorkSpace(data["item"], client)
+                case "getWorkspaceItems":
+                    ret = await getWorkspaceItems(data["item"], client)
                 case "addItem":
                     ret = await addMemo(data["item"])
                 case "edit":
@@ -97,28 +98,17 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 
-async def selectWorkSpace(workspace: WorkspaceItem, client:WSConnection):
+async def getWorkspaceItems(itemData, client:WSConnection):
     """Create or get workspace id to client"""
 
-
+    client.setWorkspace(itemData["id"])
+    objs = []
     with db.engine.connect() as connection:
-        workspaceId = connection.execute(text(f"""SELECT id FROM workspaces WHERE name='{workspace['name']}'""")).fetchone()
-        objs = []
-        if (workspaceId == None):
-            workspaceId = str(uuid4())
-            connection.execute(text(f"INSERT INTO workspaces (id, name) VALUES ( '{workspaceId}','{workspace['name']}')"))
-            connection.commit()
-
             
-
-            # TODO return all current items in workspace
-        else:
-            workspaceId = str(workspaceId).split("'")[1]
-            rows = connection.execute(text(f"""SELECT * FROM notes WHERE workspace_id='{workspaceId}'"""))
-            for row in rows:
-                objs.append({"id":str(row[0]), "text":str(row[1]), "positionx":int(row[2]), "positiony":int(row[3]), "color":str(row[4]), "workspace_id":str(row[5])})
-        client.setWorkspace(workspaceId)
-        return {"operation":"selectWorkspace", "workspaceID": str(workspaceId), "items":objs}
+        rows = connection.execute(text(f"""SELECT * FROM notes WHERE workspace_id='{client.workspaceId}'"""))
+        for row in rows:
+            objs.append({"id":str(row[0]), "text":str(row[1]), "positionx":int(row[2]), "positiony":int(row[3]), "color":str(row[4]), "workspace_id":str(row[5])})
+        return {"operation":"getWorkspaceItems", "workspaceID": str(client.workspaceId), "items":objs}
     
 
 async def editMemo(memo:MemoItem):
