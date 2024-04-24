@@ -11,11 +11,16 @@ if [ $current_dir != "scripts" ]; then
 else 
     # start database
     (cd ./db/ && docker compose up -d)
-    # TODO: start backend
+    
     # start auth
     (cd ../backend/auth &&
     docker build -t auth . &&
-    docker run -d -p 8000:8000 auth)
+    docker run -d -p 8001:8001 auth)
+
+    # start main backend
+    (cd ../backend &&
+    docker build -t backend . &&
+    docker run -d -p 8000:8000 backend)
 
     # start frontend
     (cd ../frontend/ && 
