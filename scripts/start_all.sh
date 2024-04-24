@@ -18,7 +18,7 @@ else
     docker run -d --net custom --ip 10.5.0.2 -p 8001:8001 auth)
 
     # start main backend
-    (cd ../backend &&
+    (cd ../backend/main &&
     docker build -t backend . &&
     docker run -d --net custom --ip 10.5.0.3 -p 8000:8000 backend)
 
