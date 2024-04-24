@@ -15,17 +15,17 @@ else
     # start auth
     (cd ../backend/auth &&
     docker build -t auth . &&
-    docker run -d -p 8001:8001 auth)
+    docker run -d --net custom --ip 10.5.0.2 -p 8001:8001 auth)
 
     # start main backend
-    (cd ../backend &&
+    (cd ../backend/main &&
     docker build -t backend . &&
-    docker run -d -p 8000:8000 backend)
+    docker run -d --net custom --ip 10.5.0.3 -p 8000:8000 backend)
 
     # start frontend
     (cd ../frontend/ && 
     docker build -t frontend . &&
-    docker run -d -p 3000:3000 frontend)
+    docker run -d --net custom --ip 10.5.0.4 -p 3000:3000 frontend)
 
     echo "All services started"
     exit 0

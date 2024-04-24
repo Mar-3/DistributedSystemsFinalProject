@@ -16,3 +16,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      custom:
+        ipv4_address: 10.5.0.5
+networks:
+  custom:
+    driver: bridge
+    name: custom
+    external: true
+    ipam:
+      config: 
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
