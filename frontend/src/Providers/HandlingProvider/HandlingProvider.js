@@ -19,6 +19,7 @@ const HandlingProvider = ({children}) => {
       mode:"cors",
       headers: {
         "Content-Type": "application/json",
+        "Referrer-Policy": "unsafe-url"
       },
       body: JSON.stringify({workspace_name: workspaceName })
     });
