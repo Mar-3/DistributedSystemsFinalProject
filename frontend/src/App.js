@@ -5,7 +5,7 @@ import { ContextMenu } from './UI/CustomContextMenu/ContextMenu';
 import {Toolbar } from './UI/Toolbar/Toolbar';
 import EditBox from './UI/EditBox/EditBox';
 import LaunchPage from './UI/LaunchPage/LaunchPage';
-import { WSContext } from './Providers/WSProvider/WSProvider';
+import { HandlingContext } from './Providers/WSProvider/WSProvider';
 
 
 
@@ -25,7 +25,8 @@ function App() {
     handleColorChange, 
     editObject, 
     handleDrag,
-    handleAddMemo} = useContext(WSContext);
+    handleAddMemo,
+    WSLoading} = useContext(HandlingContext);
 
   const [cMenuOpen, setCmenuOpen] = useState(false);
   const [cMenuPos, setCMenuPos] = useState({
@@ -85,7 +86,7 @@ function App() {
           )
         })}
       </div>}
-      {workspace==null && <LaunchPage handleWorkspaceSubmit={handleWorkSpaceSubmit}></LaunchPage>}
+      {workspace==null && <LaunchPage handleWorkspaceSubmit={handleWorkSpaceSubmit} WSLoading={WSLoading}></LaunchPage>}
       {cMenuOpen && <ContextMenu pos={cMenuPos} handleClickContextMenu={handleClickContextMenu}/>}
     </div>
   );

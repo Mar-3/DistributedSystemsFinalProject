@@ -12,6 +12,7 @@ const HandlingProvider = ({children}) => {
   const [workspace, setWorkspace] = useState(null);
   const [objects, setObjects] = useState(null);
   const [selectedObjectId, setSelectedObjectId] = useState(null);
+  const [WSLoading, setWSLoading ] = useState(true);
   
   const handleWorkSpaceSubmit = async (workspaceName) => {
     const res = await fetch(authUrl, {
@@ -28,7 +29,9 @@ const HandlingProvider = ({children}) => {
     setWorkspace(id);
     WS.send(JSON.stringify({"operation": "selectWorkspace",  "id": id }));
   }
-
+  WS.onOpen = (() => {
+    setWSLoading(false);
+  })
   // Message handling from websocket connection
   WS.onmessage = (async (msgData) => {
       const data = JSON.parse(msgData.data)
@@ -114,7 +117,7 @@ const HandlingProvider = ({children}) => {
 
 
   return (
-      <WSContext.Provider value={{WS, workspace, objects, selectedObjectId, setSelectedObjectId, handleRemove, handleWorkSpaceSubmit, editObject, handleDrag, handleAddMemo}}>
+      <WSContext.Provider value={{WS, workspace, objects, selectedObjectId, setSelectedObjectId, handleRemove, handleWorkSpaceSubmit, editObject, handleDrag, handleAddMemo, WSLoading}}>
           {children}
       </WSContext.Provider>
   )

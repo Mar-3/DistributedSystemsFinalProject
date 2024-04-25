@@ -2,7 +2,7 @@ import { useState } from "react";
 import './Launchpage.css'
 
 
-const LaunchPage = ({handleWorkspaceSubmit}) => {
+const LaunchPage = ({handleWorkspaceSubmit, WSLoading}) => {
 
     const [ws, setws] = useState('')
 
@@ -13,7 +13,8 @@ const LaunchPage = ({handleWorkspaceSubmit}) => {
             <br/>
             <label>Enter workspace name:</label>
             <input onChange={(event) => {setws(event.currentTarget.value)}}></input>
-            <button onClick={() => handleWorkspaceSubmit(ws)}>Enter the workspace!</button>
+            {WSLoading && <h5>Websocket connection loading...</h5>}
+            <button disabled={WSLoading} onClick={() => handleWorkspaceSubmit(ws)}>Enter the workspace!</button>
         </div>
         </>
     )
