@@ -5,7 +5,7 @@ import { ContextMenu } from './UI/CustomContextMenu/ContextMenu';
 import {Toolbar } from './UI/Toolbar/Toolbar';
 import EditBox from './UI/EditBox/EditBox';
 import LaunchPage from './UI/LaunchPage/LaunchPage';
-import { HandlingContext } from './Providers/WSProvider/WSProvider';
+import { HandlingContext } from './Providers/HandlingProvider/HandlingProvider';
 
 
 
