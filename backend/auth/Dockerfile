@@ -10,4 +10,4 @@ ENV PYTHONPATH /src/app/
 
 COPY ./app/ /src/app/
 
-CMD ["uvicorn" ,"app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["gunicorn" ,"app.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8001"]
