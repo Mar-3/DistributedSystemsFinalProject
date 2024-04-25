@@ -5,10 +5,7 @@ import { ContextMenu } from './UI/CustomContextMenu/ContextMenu';
 import {Toolbar } from './UI/Toolbar/Toolbar';
 import EditBox from './UI/EditBox/EditBox';
 import LaunchPage from './UI/LaunchPage/LaunchPage';
-import { HandlingContext } from './Providers/HandlingProvider/HandlingProvider';
-
-
-
+import { WSContext } from './Providers/WSProvider/WSProvider';
 
 
 function App() {
@@ -26,7 +23,7 @@ function App() {
     editObject, 
     handleDrag,
     handleAddMemo,
-    WSLoading} = useContext(HandlingContext);
+    WSLoading} = useContext(WSContext);
 
   const [cMenuOpen, setCmenuOpen] = useState(false);
   const [cMenuPos, setCMenuPos] = useState({

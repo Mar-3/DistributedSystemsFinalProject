@@ -29,7 +29,7 @@ const HandlingProvider = ({children}) => {
     setWorkspace(id);
     WS.send(JSON.stringify({"operation": "selectWorkspace",  "id": id }));
   }
-  WS.onOpen = (() => {
+  WS.onopen = (() => {
     setWSLoading(false);
   })
   // Message handling from websocket connection
